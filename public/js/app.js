@@ -273,6 +273,36 @@
     document.body.removeChild(a);
   }
 
+  /**
+   * Wrapper seguro para fetch que garante resposta JSON válida.
+   * Evita o erro "JSON.parse: unexpected character at line 1 column 1"
+   * quando o servidor retorna HTML (ex: página de erro 502/504).
+   */
+  async function fetchJson(url, opcoes) {
+    let res;
+    try {
+      res = await fetch(url, opcoes);
+    } catch (err) {
+      throw new Error(`Erro de rede ao acessar ${url}: ${err.message}`);
+    }
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      let textoResposta = '';
+      try { textoResposta = await res.text(); } catch (_) {}
+      throw new Error(
+        `Servidor retornou resposta inesperada (HTTP ${res.status}). ` +
+        `Conteúdo: ${textoResposta.slice(0, 120).replace(/<[^>]+>/g, '').trim()}`
+      );
+    }
+    let data;
+    try {
+      data = await res.json();
+    } catch (err) {
+      throw new Error(`Resposta inválida do servidor: ${err.message}`);
+    }
+    return { res, data };
+  }
+
   // =================== GESTÃO DE ABAS ===================
   document.querySelectorAll('.nav-tab').forEach(tabBtn => {
     tabBtn.addEventListener('click', () => {
@@ -340,8 +370,7 @@
     state.cnpjAtual = cleanCnpj;
 
     try {
-      const res = await fetch(`/api/consulta/${cleanCnpj}`);
-      const data = await res.json();
+      const { res, data } = await fetchJson(`/api/consulta/${cleanCnpj}`);
 
       if (!res.ok || !data.sucesso) {
         throw new Error(data.erro || 'Falha ao realizar a consulta');
@@ -880,12 +909,11 @@
     }
 
     try {
-      const res = await fetch('/api/tcu/emitir', {
+      const { res, data } = await fetchJson('/api/tcu/emitir', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cnpj: state.cnpjAtual })
       });
-      const data = await res.json();
 
       if (!res.ok || !data.sucesso) {
         throw new Error(data.erro || 'Erro na consulta do TCU');
@@ -936,12 +964,11 @@
     }
 
     try {
-      const res = await fetch('/api/fgts/emitir', {
+      const { res, data } = await fetchJson('/api/fgts/emitir', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cnpj: state.cnpjAtual })
       });
-      const data = await res.json();
 
       if (!res.ok || !data.sucesso) {
         throw new Error(data.erro || 'Erro na emissão do FGTS');
@@ -998,12 +1025,11 @@
     }
 
     try {
-      const res = await fetch('/api/sefa/emitir', {
+      const { res, data } = await fetchJson('/api/sefa/emitir', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cnpj: state.cnpjAtual })
       });
-      const data = await res.json();
 
       if (!res.ok || !data.sucesso) {
         throw new Error(data.erro || 'Falha na emissão pela SEFA-PR');
@@ -1060,12 +1086,11 @@
     }
 
     try {
-      const res = await fetch('/api/curitiba/emitir', {
+      const { res, data } = await fetchJson('/api/curitiba/emitir', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cnpj: state.cnpjAtual })
       });
-      const data = await res.json();
 
       if (!res.ok || !data.sucesso) {
         throw new Error(data.erro || 'Falha na emissão pela Prefeitura de Curitiba');
@@ -1118,13 +1143,12 @@
     );
 
     try {
-      const res = await fetch('/api/receita/emitir-assistido', {
+      const { res, data } = await fetchJson('/api/receita/emitir-assistido', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cnpj: state.cnpjAtual }),
         signal: AbortSignal.timeout(140000)
       });
-      const data = await res.json();
 
       if (!res.ok || !data.sucesso) {
         throw new Error(data.erro || 'Falha na emissão pela Receita Federal');
@@ -1329,8 +1353,7 @@
     el.tstCaptchaImg.src = '';
 
     try {
-      const res = await fetch('/api/tst/captcha');
-      const data = await res.json();
+      const { res, data } = await fetchJson('/api/tst/captcha');
       if (!res.ok || !data.sucesso) {
         throw new Error(data.erro || 'Falha ao obter captcha do TST');
       }
@@ -1376,7 +1399,7 @@
     el.btnConfirmarEmitirCndt.disabled = true;
 
     try {
-      const res = await fetch('/api/tst/emitir', {
+      const { res, data } = await fetchJson('/api/tst/emitir', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1385,7 +1408,6 @@
           resposta: resposta
         })
       });
-      const data = await res.json();
 
       if (!res.ok || !data.sucesso) {
         throw new Error(data.erro || 'Falha ao emitir certidão no TST');
@@ -1450,7 +1472,7 @@
     el.btnConfirmarValidarCndt.disabled = true;
 
     try {
-      const res = await fetch('/api/tst/validar', {
+      const { res, data } = await fetchJson('/api/tst/validar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1459,7 +1481,6 @@
           anoCertidao: ano
         })
       });
-      const data = await res.json();
 
       if (!res.ok || !data.sucesso) {
         throw new Error(data.erro || 'Falha na validação');
@@ -1575,7 +1596,7 @@
     el.btnConfirmarUpload.textContent = 'Enviando...';
 
     try {
-      const res = await fetch('/api/dossie/upload-pdf', {
+      const { res, data } = await fetchJson('/api/dossie/upload-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1585,7 +1606,6 @@
           base64: state.selectedPdfBase64
         })
       });
-      const data = await res.json();
 
       if (!res.ok || !data.sucesso) {
         throw new Error(data.erro || 'Falha ao salvar o PDF no servidor');
@@ -1649,12 +1669,11 @@
     };
 
     try {
-      const res = await fetch('/api/dossie/salvar', {
+      const { res, data } = await fetchJson('/api/dossie/salvar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dossiePayload)
       });
-      const data = await res.json();
 
       if (!res.ok || !data.sucesso) {
         throw new Error(data.erro || 'Falha ao salvar dossiê');
@@ -1670,8 +1689,7 @@
   // =================== LISTA DE CONTRATADAS MONITORADAS ===================
   async function carregarListaContratadas() {
     try {
-      const res = await fetch('/api/contratadas');
-      const data = await res.json();
+      const { res, data } = await fetchJson('/api/contratadas');
       if (!res.ok || !data.sucesso) return;
 
       el.countContratadas.textContent = data.total || 0;
@@ -1779,8 +1797,7 @@
 
   async function atualizarContadorContratadas() {
     try {
-      const res = await fetch('/api/contratadas');
-      const data = await res.json();
+      const { res, data } = await fetchJson('/api/contratadas');
       if (data.sucesso) {
         el.countContratadas.textContent = data.total || 0;
       }
@@ -1792,8 +1809,7 @@
 
   async function abrirModalConfig() {
     try {
-      const res = await fetch('/api/config');
-      const data = await res.json();
+      const { res, data } = await fetchJson('/api/config');
       if (data.sucesso && data.temChaveCgu) {
         el.configCguKey.placeholder = `Chave atual: ${data.chaveMascarada}`;
       } else {
@@ -1806,12 +1822,11 @@
   el.btnSalvarConfig.addEventListener('click', async () => {
     const key = el.configCguKey.value.trim();
     try {
-      const res = await fetch('/api/config', {
+      const { res, data } = await fetchJson('/api/config', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cguApiKey: key })
       });
-      const data = await res.json();
       if (data.sucesso) {
         el.modalConfig.classList.remove('active');
         mostrarAlerta('success', 'Configurações de API salvas com sucesso!');
