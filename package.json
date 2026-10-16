@@ -1,0 +1,31 @@
+{
+  "name": "sicc-cmc",
+  "version": "1.0.0",
+  "description": "Sistema de Consulta e Conformidade de Certidões de Contratadas - Câmara Municipal de Curitiba",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "node -c server.js && node -c public/js/app.js",
+    "test": "node -c server.js && node -c public/js/app.js"
+  },
+  "keywords": [
+    "certidoes",
+    "contratacoes",
+    "cmc",
+    "curitiba",
+    "compliance",
+    "cndt",
+    "sicaf",
+    "receita-federal"
+  ],
+  "author": "Diretoria de Contratações - CMC",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer-core": "^24.43.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "devDependencies": {
+    "isomorphic-git": "^1.44.2"
+  }
+}

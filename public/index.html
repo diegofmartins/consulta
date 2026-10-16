@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SICC - Consulta de Certidões de Contratadas | Câmara Municipal de Curitiba</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+</head>
+<body>
+
+  <!-- Cabeçalho Institucional -->
+  <header class="header">
+    <div class="header-container">
+      <div class="header-brand">
+        <div class="header-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18M3 10h18M5 10v11M9 10v11M15 10v11M19 10v11M12 2L2 7h20L12 2z"/>
+          </svg>
+        </div>
+        <div class="header-title">
+          <h1>Câmara Municipal de Curitiba</h1>
+          <p>Diretoria de Contratações • Sistema Integrado de Consulta de Certidões (SICC)</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-outline btn-sm" id="btn-config" title="Configurar chaves de API">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Configurações
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Cabeçalho Exclusivo para Impressão -->
+  <div class="print-only" style="padding: 15px 0; border-bottom: 2px solid #000; margin-bottom: 20px;">
+    <h2 style="font-size: 16pt; margin: 0;">CÂMARA MUNICIPAL DE CURITIBA</h2>
+    <h3 style="font-size: 13pt; margin: 0; color: #333;">DIRETORIA DE CONTRATAÇÕES • DOSSIÊ DE CONFORMIDADE DE CERTIDÕES</h3>
+    <p style="font-size: 9pt; margin: 5px 0 0 0; color: #666;">Documento comprobatório de fiscalização periódica de conformidade fiscal e trabalhista (Lei Federal nº 14.133/2021).</p>
+    <p style="font-size: 9pt; margin: 2px 0 0 0; color: #666;">Data da emissão do relatório: <span id="print-date"></span></p>
+  </div>
+
+  <main class="main-container">
+
+    <!-- Navegação por Abas -->
+    <nav class="nav-tabs no-print">
+      <button class="nav-tab active" data-tab="tab-consulta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Consulta & Dossiê
+      </button>
+      <button class="nav-tab" data-tab="tab-contratadas" id="tab-btn-contratadas">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Contratadas Monitoradas (<span id="count-contratadas">0</span>)
+      </button>
+    </nav>
+
+    <!-- ABA 1: CONSULTA & DOSSIÊ -->
+    <div id="tab-consulta" class="tab-content active">
+
+      <!-- Card de Busca de CNPJ -->
+      <section class="card no-print">
+        <div class="card-header">
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            Pesquisa de Fornecedor / Contratada
+          </h2>
+        </div>
+        <div class="card-body">
+          <form id="form-busca-cnpj" class="search-box">
+            <div class="input-cnpj-group">
+              <label for="input-cnpj">Número do CNPJ da Empresa:</label>
+              <input type="text" id="input-cnpj" placeholder="00.000.000/0000-00" maxlength="18" autocomplete="off" required>
+            </div>
+            <div style="align-self: flex-end;">
+              <button type="submit" class="btn btn-primary" id="btn-buscar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                Consultar APIs
+              </button>
+              <button type="button" class="btn btn-outline" id="btn-limpar">Limpar</button>
+            </div>
+          </form>
+
+          <div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);">
+            <strong>Exemplos rápidos para teste:</strong>
+            <button type="button" class="btn btn-outline btn-sm btn-sample" data-cnpj="76.483.817/0001-20" style="margin-left: 5px;">Copel (PR)</button>
+            <button type="button" class="btn btn-outline btn-sm btn-sample" data-cnpj="76.484.013/0001-45">Sanepar (PR)</button>
+            <button type="button" class="btn btn-outline btn-sm btn-sample" data-cnpj="00.000.000/0001-91">Banco do Brasil</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feedback de Carregamento -->
+      <div id="loading-spinner" style="display: none; text-align: center; padding: 30px;">
+        <div style="display: inline-block; width: 36px; height: 36px; border: 4px solid var(--border-color); border-top-color: var(--cmc-blue-primary); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        <p style="margin-top: 10px; font-weight: 600; color: var(--cmc-blue-primary);">Consultando APIs governamentais (Receita Federal, SICAF Compras.gov.br e CGU)...</p>
+      </div>
+
+      <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+      </style>
+
+      <!-- Mensagens de Notificação -->
+      <div id="alert-container"></div>
+
+      <!-- Área de Resultados (Visível após busca) -->
+      <div id="area-resultado" style="display: none;">
+
+        <!-- 1. Painel Empresarial Aglutinado (Dados Cadastrais, SICAF e Sanções) -->
+        <section class="company-condensed-card" id="painel-empresa-aglutinado">
+          <div class="company-header-bar">
+            <div class="company-title-area">
+              <h2>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4zM5 21V10.85M19 21V10.85"/></svg>
+                <span id="info-razao-social">Nenhuma empresa consultada</span>
+              </h2>
+              <div class="company-sub">
+                <span id="info-nome-fantasia">-</span> &bull; CNPJ: <strong id="info-cnpj" style="font-family: monospace;">-</strong> &bull; <span id="info-municipio">-</span>
+              </div>
+            </div>
+            <div class="company-badges-group">
+              <span id="badge-situacao-rfb" class="badge badge-neutral">CADASTRO</span>
+              <span id="badge-sicaf" class="badge badge-neutral">SICAF</span>
+              <span id="badge-sancoes" class="badge badge-neutral">CGU SANÇÕES</span>
+            </div>
+          </div>
+          <div class="company-meta-grid">
+            <div class="company-meta-item">
+              <div class="meta-label">Natureza / Porte</div>
+              <div class="meta-value" id="info-porte">-</div>
+            </div>
+            <div class="company-meta-item">
+              <div class="meta-label">Atividade Principal (CNAE)</div>
+              <div class="meta-value" id="info-cnae" title="CNAE Principal">-</div>
+            </div>
+            <div class="company-meta-item">
+              <div class="meta-label">Habilitação Federal (SICAF)</div>
+              <div class="meta-value" id="sicaf-body" style="font-size: 0.82rem;">Aguardando consulta do CNPJ...</div>
+            </div>
+            <div class="company-meta-item">
+              <div class="meta-label">Sanções Impeditivas (CEIS / CNEP)</div>
+              <div class="meta-value" id="sancoes-body" style="font-size: 0.82rem;">Nenhum registro ativo.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. Barra de Execução Automatizada em Sequência -->
+        <div class="sequence-control-card no-print">
+          <div class="sequence-header-row">
+            <div class="sequence-info">
+              <h3>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                Verificação Contínua em Sequência
+              </h3>
+              <p>O robô consulta e emite cada certidão em ordem automática, solicitando sua interação apenas quando indispensável.</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button type="button" class="btn btn-primary" id="btn-iniciar-sequencia" style="font-weight: 700; padding: 10px 18px; box-shadow: 0 2px 8px rgba(37,99,235,0.25);">
+                ⚡ Verificar Todas as Certidões em Sequência
+              </button>
+            </div>
+          </div>
+          <div class="stepper-steps-row" id="stepper-certidoes">
+            <div class="stepper-pill" id="step-tcu"><span>1. TCU / APF</span></div>
+            <div class="stepper-pill" id="step-fgts"><span>2. FGTS / Caixa</span></div>
+            <div class="stepper-pill" id="step-sefa"><span>3. SEFA-PR</span></div>
+            <div class="stepper-pill" id="step-curitiba"><span>4. Curitiba / PMC</span></div>
+            <div class="stepper-pill" id="step-cndt"><span>5. CNDT (TST)</span></div>
+            <div class="stepper-pill" id="step-receita"><span>6. Receita Federal</span></div>
+          </div>
+        </div>
+
+        <!-- 3. Tabela Completa com Linhas Expansíveis (Dossiê) -->
+        <section class="card">
+          <div class="card-header">
+            <h2>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Dossiê de Certidões de Regularidade (Fiscal, Trabalhista e Sanções)
+            </h2>
+            <div class="no-print" style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-outline btn-sm" id="btn-expandir-todas" title="Expandir ou recolher detalhes de todas as certidões">
+                Expandir / Recolher Detalhes
+              </button>
+              <button type="button" class="btn btn-outline btn-sm" id="btn-validar-cndt" title="Validar número de CNDT existente">
+                Validar CNDT Existente
+              </button>
+            </div>
+          </div>
+          <div class="card-body" style="padding: 0; overflow-x: auto;">
+            <table class="cert-table">
+              <thead>
+                <tr>
+                  <th style="width: 32%;">Certidão / Órgão Emissor</th>
+                  <th style="width: 18%;">Situação</th>
+                  <th style="width: 22%;">Vigência & Validade</th>
+                  <th style="width: 28%; text-align: right;" class="no-print">Ações & Download</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-certidoes">
+                <!-- Linhas principais e gavetas expansíveis geradas via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 4. Dados do Contrato na Câmara de Curitiba -->
+        <section class="card">
+          <div class="card-header">
+            <h2>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+              Vinculação com Contrato na CMC (Diretoria de Contratações)
+            </h2>
+          </div>
+          <div class="card-body">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+              <div>
+                <label style="display: block; font-weight: 600; font-size: 0.8rem; margin-bottom: 4px;">Nº do Contrato / Processo CMC:</label>
+                <input type="text" id="contrato-numero" class="cert-input-control" style="width: 100%;" placeholder="Ex: Contrato nº 42/2025 - Pregão 15/2025">
+              </div>
+              <div>
+                <label style="display: block; font-weight: 600; font-size: 0.8rem; margin-bottom: 4px;">Objeto do Contrato:</label>
+                <input type="text" id="contrato-objeto" class="cert-input-control" style="width: 100%;" placeholder="Ex: Prestação de serviços de TI / Limpeza">
+              </div>
+              <div>
+                <label style="display: block; font-weight: 600; font-size: 0.8rem; margin-bottom: 4px;">Gestor / Fiscal do Contrato:</label>
+                <input type="text" id="contrato-fiscal" class="cert-input-control" style="width: 100%;" placeholder="Nome do servidor responsável">
+              </div>
+              <div>
+                <label style="display: block; font-weight: 600; font-size: 0.8rem; margin-bottom: 4px;">Vigência do Contrato:</label>
+                <input type="date" id="contrato-vigencia" class="cert-input-control" style="width: 100%;">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Barra de Ações Inferior -->
+        <div class="no-print" style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 40px;">
+          <button type="button" class="btn btn-outline" id="btn-imprimir">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Imprimir / Exportar Relatório (SEI / Processo)
+          </button>
+          <button type="button" class="btn btn-success" id="btn-salvar-dossie">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Salvar Dossiê da Contratada
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ABA 2: CONTRATADAS MONITORADAS -->
+    <div id="tab-contratadas" class="tab-content">
+      <section class="card">
+        <div class="card-header">
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Quadro de Contratadas Monitoradas na Câmara de Curitiba
+          </h2>
+          <div>
+            <input type="text" id="filtro-contratadas" class="cert-input-control" placeholder="Filtrar por nome ou CNPJ..." style="width: 250px;">
+          </div>
+        </div>
+        <div class="card-body" style="padding: 0; overflow-x: auto;">
+          <table class="table-contratadas">
+            <thead>
+              <tr>
+                <th>CNPJ</th>
+                <th>Razão Social / Nome Fantasia</th>
+                <th>Contrato CMC</th>
+                <th>Status Geral</th>
+                <th>Última Atualização</th>
+                <th style="text-align: right;">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-contratadas-lista">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                  Nenhuma contratada cadastrada ainda. Faça uma busca por CNPJ na aba "Consulta & Dossiê" e clique em "Salvar Dossiê".
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- MODAL: EMISSÃO DE CNDT (TST) -->
+  <div class="modal-overlay" id="modal-tst-emitir">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Emissão da Certidão Trabalhista (CNDT - TST)</h3>
+        <button type="button" class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">
+          A CNDT é gerada diretamente pelo Tribunal Superior do Trabalho. Digite os caracteres exibidos na imagem do desafio para emitir e fazer o download do <strong>PDF oficial</strong>:
+        </p>
+        
+        <div class="captcha-box">
+          <div class="captcha-img-wrap">
+            <img id="tst-captcha-img" alt="Desafio Captcha TST" src="" style="display: block;">
+          </div>
+          <div class="captcha-controls">
+            <input type="text" id="tst-captcha-input" class="captcha-input" maxlength="6" placeholder="código" autocomplete="off" autofocus>
+            <button type="button" class="btn btn-outline btn-sm" id="btn-recarregar-captcha" title="Recarregar imagem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" id="btn-ouvir-captcha" title="Ouvir caracteres">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            </button>
+            <audio id="tst-captcha-audio" style="display: none;"></audio>
+          </div>
+        </div>
+
+        <div id="tst-emitir-status" style="font-size: 0.85rem; text-align: center; min-height: 20px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-close-modal>Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btn-confirmar-emitir-cndt">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Emitir e Baixar PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VALIDAÇÃO DE CNDT EXISTENTE (TST) -->
+  <div class="modal-overlay" id="modal-tst-validar">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Validar Certidão Trabalhista Existente (TST)</h3>
+        <button type="button" class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;">
+          Esta consulta valida uma CNDT já emitida informando seu número e ano diretamente nos servidores do TST <strong>sem necessidade de CAPTCHA</strong>, retornando o PDF original autenticado.
+        </p>
+        
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px;">Número da Certidão:</label>
+            <input type="number" id="tst-validar-num" class="cert-input-control" style="width: 100%;" placeholder="Ex: 12345678">
+          </div>
+          <div>
+            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px;">Ano:</label>
+            <input type="number" id="tst-validar-ano" class="cert-input-control" style="width: 100%;" value="2026">
+          </div>
+        </div>
+
+        <div id="tst-validar-status" style="font-size: 0.85rem; min-height: 20px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-close-modal>Fechar</button>
+        <button type="button" class="btn btn-primary" id="btn-confirmar-validar-cndt">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Validar no TST
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: UPLOAD DE PDF DA CERTIDÃO -->
+  <div class="modal-overlay" id="modal-upload-pdf">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-upload-title">Anexar Arquivo PDF da Certidão</h3>
+        <button type="button" class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="upload-cert-tipo">
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">
+          Selecione o arquivo PDF oficial emitido para arquivamento no dossiê da contratada:
+        </p>
+
+        <div style="border: 2px dashed var(--border-color); border-radius: 8px; padding: 24px; text-align: center; background: #fafbfc; cursor: pointer;" id="drop-area">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--cmc-blue-primary)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p style="margin-top: 10px; font-weight: 600;">Clique para selecionar ou arraste o arquivo PDF aqui</p>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Apenas arquivos .pdf (Máximo 20 MB)</p>
+          <input type="file" id="file-input-pdf" accept="application/pdf" style="display: none;">
+        </div>
+
+        <div id="upload-file-info" style="margin-top: 12px; font-size: 0.85rem; font-weight: 600; color: var(--cmc-blue-dark); display: none;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-close-modal>Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btn-confirmar-upload" disabled>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Salvar no Dossiê
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIGURAÇÃO DE APIS -->
+  <div class="modal-overlay" id="modal-config">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Configuração de APIs Governamentais</h3>
+        <button type="button" class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px;">
+            Chave de Acesso (API Key) - Portal da Transparência / CGU:
+          </label>
+          <input type="text" id="config-cgu-key" class="cert-input-control" style="width: 100%; font-family: monospace;" placeholder="Cole aqui sua chave-api-dados da CGU">
+          <small style="display: block; margin-top: 6px; color: var(--text-muted); line-height: 1.4;">
+            A API da CGU pesquisa sanções nos cadastros <strong>CEIS</strong> (Inidôneas/Suspensas) e <strong>CNEP</strong> (Lei Anticorrupção). 
+            Para gerar sua chave gratuita imediatamente, acesse: 
+            <a href="https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email" target="_blank" rel="noopener" style="color: var(--cmc-blue-light); font-weight: 600;">Cadastro de E-mail na CGU</a>.
+          </small>
+        </div>
+
+        <div class="alert alert-info" style="margin-bottom: 0;">
+          <div>
+            <strong>Status das Demais APIs:</strong>
+            <ul style="margin-top: 6px; padding-left: 18px; font-size: 0.82rem;">
+              <li><strong>BrasilAPI (Receita Federal):</strong> Aberta e gratuita (sem chave).</li>
+              <li><strong>Compras.gov.br (SICAF):</strong> Dados Abertos oficial (sem chave).</li>
+              <li><strong>TST (CNDT):</strong> Emissão direta com desafio e validação automática.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-close-modal>Fechar</button>
+        <button type="button" class="btn btn-primary" id="btn-salvar-config">Salvar Configurações</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

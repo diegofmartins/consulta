@@ -1,0 +1,841 @@
+/* SICC-CMC: Estilo Institucional da Câmara Municipal de Curitiba */
+:root {
+  --cmc-blue-dark: #0f2b48;
+  --cmc-blue-primary: #1a446c;
+  --cmc-blue-light: #2a6f97;
+  --cmc-accent: #014f86;
+  --bg-page: #f4f6f9;
+  --bg-card: #ffffff;
+  --border-color: #d1d9e2;
+  --border-light: #e5ebf0;
+  --text-primary: #1c2d42;
+  --text-muted: #5a6e85;
+  --text-light: #899bb0;
+  
+  --status-ok: #198754;
+  --status-ok-bg: #e8f5e9;
+  --status-ok-border: #a5d6a7;
+  
+  --status-warn: #b26a00;
+  --status-warn-bg: #fff8e1;
+  --status-warn-border: #ffe082;
+  
+  --status-danger: #c5221f;
+  --status-danger-bg: #fde8e8;
+  --status-danger-border: #f8b4b4;
+
+  --status-neutral: #495057;
+  --status-neutral-bg: #e9ecef;
+  --status-neutral-border: #ced4da;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.04);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+/* Header Institucional */
+.header {
+  background: linear-gradient(135deg, var(--cmc-blue-dark) 0%, var(--cmc-blue-primary) 100%);
+  color: #ffffff;
+  padding: 14px 24px;
+  box-shadow: var(--shadow-md);
+  border-bottom: 3px solid #f39200; /* Detalhe dourado/laranja institucional */
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-icon {
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-title h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.header-title p {
+  font-size: 0.82rem;
+  color: #ccdbe8;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Container Principal */
+.main-container {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+/* Abas de Navegação */
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.nav-tab {
+  background: none;
+  border: none;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-tab:hover {
+  color: var(--cmc-blue-primary);
+  background-color: rgba(26, 68, 108, 0.05);
+}
+
+.nav-tab.active {
+  color: var(--cmc-blue-primary);
+  border-bottom-color: var(--cmc-blue-primary);
+  background-color: #fff;
+  border-radius: 6px 6px 0 0;
+}
+
+/* Painéis de Conteúdo */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Cartões (Cards) */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 12px 18px;
+  background-color: #fafbfc;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cmc-blue-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-body {
+  padding: 18px;
+}
+
+/* Barra de Busca de CNPJ */
+.search-box {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.input-cnpj-group {
+  flex: 1;
+  min-width: 280px;
+  position: relative;
+}
+
+.input-cnpj-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+.input-cnpj-group input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 1.1rem;
+  font-family: monospace;
+  font-weight: 600;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-cnpj-group input:focus {
+  border-color: var(--cmc-blue-light);
+}
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--cmc-blue-primary);
+  color: #fff;
+  border-color: var(--cmc-blue-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--cmc-blue-dark);
+}
+
+.btn-success {
+  background-color: var(--status-ok);
+  color: #fff;
+}
+
+.btn-success:hover {
+  background-color: #146c43;
+}
+
+.btn-outline {
+  background-color: #fff;
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.btn-outline:hover {
+  background-color: #f1f4f8;
+  border-color: var(--cmc-blue-light);
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 0.8rem;
+}
+
+/* Grid de Informações Cadastrais */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.info-item {
+  background-color: #f8fafc;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+}
+
+.info-item .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  margin-bottom: 2px;
+}
+
+.info-item .value {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+/* Badges de Status */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.badge-ok {
+  background-color: var(--status-ok-bg);
+  color: var(--status-ok);
+  border: 1px solid var(--status-ok-border);
+}
+
+.badge-warn {
+  background-color: var(--status-warn-bg);
+  color: var(--status-warn);
+  border: 1px solid var(--status-warn-border);
+}
+
+.badge-danger {
+  background-color: var(--status-danger-bg);
+  color: var(--status-danger);
+  border: 1px solid var(--status-danger-border);
+}
+
+.badge-neutral {
+  background-color: var(--status-neutral-bg);
+  color: var(--status-neutral);
+  border: 1px solid var(--status-neutral-border);
+}
+
+/* Tabela de Certidões do Dossiê */
+.cert-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cert-table th {
+  background-color: #f1f4f8;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.cert-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: middle;
+}
+
+.cert-table tr:hover td {
+  background-color: #fafbfc;
+}
+
+.cert-title-cell {
+  font-weight: 600;
+  color: var(--cmc-blue-dark);
+}
+
+.cert-title-cell small {
+  display: block;
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.cert-inputs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cert-input-control {
+  padding: 6px 8px;
+  font-size: 0.82rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.cert-input-control:focus {
+  border-color: var(--cmc-blue-light);
+  outline: none;
+}
+
+.cert-actions-cell {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 43, 72, 0.6);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-box {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  width: 90%;
+  max-width: 540px;
+  overflow: hidden;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+  background: var(--cmc-blue-dark);
+  color: #fff;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  font-size: 1rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 18px;
+}
+
+.modal-footer {
+  padding: 12px 18px;
+  background: #f8fafc;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Captcha Box */
+.captcha-box {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 14px;
+  text-align: center;
+  margin: 12px 0;
+}
+
+.captcha-img-wrap {
+  display: inline-block;
+  background: #ffffff;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.captcha-img-wrap img {
+  display: block;
+  min-width: 260px;
+  height: 80px;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.captcha-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.captcha-input {
+  width: 180px;
+  padding: 10px 14px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 4px;
+  border: 2px solid var(--cmc-blue-primary);
+  border-radius: 6px;
+  outline: none;
+  font-family: monospace;
+}
+
+.captcha-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* Alertas e Notificações */
+.alert {
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.alert-info {
+  background-color: #e3f2fd;
+  color: #0c5460;
+  border: 1px solid #b8daff;
+}
+
+.alert-success {
+  background-color: var(--status-ok-bg);
+  color: #0f5132;
+  border: 1px solid var(--status-ok-border);
+}
+
+.alert-warning {
+  background-color: var(--status-warn-bg);
+  color: #664d03;
+  border: 1px solid var(--status-warn-border);
+}
+
+.alert-danger {
+  background-color: var(--status-danger-bg);
+  color: #842029;
+  border: 1px solid var(--status-danger-border);
+}
+
+/* Lista de Contratadas */
+.table-contratadas {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-contratadas th {
+  background-color: #f1f4f8;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.table-contratadas td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* =================== NOVO DESIGN MODERNO E MINIMALISTA =================== */
+
+/* Painel Cadastral Aglutinado */
+.company-condensed-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.company-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.company-title-area h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.company-title-area .company-sub {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.company-badges-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.company-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  padding-top: 14px;
+  font-size: 0.82rem;
+}
+
+.company-meta-item .meta-label {
+  color: #64748b;
+  font-size: 0.73rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.company-meta-item .meta-value {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* Barra de Execução Sequencial */
+.sequence-control-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sequence-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sequence-info h3 {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0f2b48;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.sequence-info p {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.stepper-steps-row {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-top: 4px;
+}
+
+.stepper-pill {
+  flex: 1;
+  min-width: 130px;
+  padding: 6px 10px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #475569;
+  transition: all 0.2s ease;
+}
+
+.stepper-pill.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+}
+
+.stepper-pill.done {
+  border-color: #86efac;
+  background: #f0fdf4;
+  color: #166534;
+  font-weight: 600;
+}
+
+.stepper-pill.skipped {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+  color: #94a3b8;
+}
+
+/* Linhas Expansíveis (Accordion) */
+.cert-row-main {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.cert-row-main:hover {
+  background-color: #f8fafc;
+}
+
+.cert-row-main.is-expanded {
+  background-color: #f1f5f9;
+}
+
+.cert-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 0.72rem;
+  margin-right: 8px;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.cert-row-main.is-expanded .cert-chevron {
+  transform: rotate(90deg);
+  background: #cbd5e1;
+  color: #0f172a;
+}
+
+.cert-row-drawer {
+  display: none;
+  background-color: #fbfcfe;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.cert-row-drawer.is-open {
+  display: table-row;
+}
+
+.drawer-inner {
+  padding: 16px 20px 20px 20px;
+}
+
+.drawer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.drawer-field label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.drawer-footer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* Estilos de Impressão (Relatório de Fiscalização / SEI) */
+@media print {
+  body {
+    background-color: #fff;
+    color: #000;
+    font-size: 11pt;
+  }
+  .header, .nav-tabs, .search-box, .btn, .cert-actions-cell, .no-print, .sequence-control-card, .cert-chevron {
+    display: none !important;
+  }
+  .cert-row-drawer {
+    display: table-row !important;
+  }
+  .main-container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .card {
+    border: 1px solid #000;
+    box-shadow: none;
+    margin-bottom: 15px;
+    page-break-inside: avoid;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .cert-table th, .cert-table td {
+    border: 1px solid #999;
+    padding: 6px 8px;
+  }
+}
+
+.print-only {
+  display: none;
+}
